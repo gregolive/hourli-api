@@ -17,7 +17,10 @@ import initializeMongo from './config/mongoConfig.js';
 initializeMongo(mongoose);
 
 // routes
+import payPeriodsRouterV1 from './routes/v1/payPeriods';
 import shiftRouterV1 from './routes/v1/shifts.js';
+
+app.use('/pay-period', payPeriodsRouterV1);
 app.use('/pay-period/:payPeriodId/shifts', shiftRouterV1);
 
 export default app;
