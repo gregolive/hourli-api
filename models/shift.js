@@ -18,7 +18,7 @@ const ShiftSchema = new Schema(
     payPeriod: {
       type: Schema.Types.ObjectId,
       ref: 'PayPeriod',
-      required: true,
+      //required: true,
     },
     /*user: {
       type: Schema.Types.ObjectId,
