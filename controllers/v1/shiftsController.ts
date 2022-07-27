@@ -1,3 +1,4 @@
+import express from 'express';
 import { body, validationResult } from 'express-validator';
 import Shift from '../../models/shift.js';
 
@@ -8,7 +9,7 @@ export const create = [
   body('breaks', 'Break time is empty').trim().isLength({ min: 1 }).escape(),
 
   // Process request
-  async (req, res, next) => {
+  async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const errors = validationResult(req).mapped();
 
     if (Object.keys(errors).length > 0) {
@@ -24,7 +25,7 @@ export const create = [
 
       shift.save((err) => {
         if (err) return next(err);
-        Shift.findOne(shift).populate('payPeriod', 'startDate endDate').exec((error, populated_shift) => {
+        Shift.findOne({ _id: shift._id }).populate('payPeriod', 'startDate endDate').exec((error, populated_shift) => {
           res.status(200).json({ shift: populated_shift });
         });
       });

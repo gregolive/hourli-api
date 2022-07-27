@@ -2,7 +2,6 @@ import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import mongoose from 'mongoose';
 
 const app = express();
 
@@ -14,14 +13,14 @@ app.use(cookieParser());
 
 // mongodb/mongoose connection set up
 import initializeMongo from './config/mongoConfig.js';
-initializeMongo(mongoose);
+initializeMongo();
 
 // routes
 import payPeriodsRouterV1 from './routes/v1/payPeriods.js';
-import shiftRouterV1 from './routes/v1/shifts.js';
+import shiftsRouterV1 from './routes/v1/shifts.js';
 
 app.use('/pay-period', payPeriodsRouterV1);
 //app.use('/pay-period/:payPeriodId/shifts', shiftRouterV1);
-app.use('/shifts', shiftRouterV1);
+app.use('/shifts', shiftsRouterV1);
 
 export default app;
