@@ -1,15 +1,20 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-import cookieParser from 'cookie-parser';
+import session from 'express-session';
 
 const app = express();
 
 // middleware
-app.use(cors());
+app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
+app.use(session({
+    secret: '',
+    resave: true,
+    saveUninitialized: true,
+  })
+);
 
 // mongodb/mongoose connection set up
 import initializeMongo from './config/mongoConfig';
