@@ -12,12 +12,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // mongodb/mongoose connection set up
-import initializeMongo from './config/mongoConfig.js';
+import initializeMongo from './config/mongoConfig';
 initializeMongo();
 
 // routes
-import payPeriodsRouterV1 from './routes/v1/payPeriods.js';
-import shiftsRouterV1 from './routes/v1/shifts.js';
+import payPeriodsRouterV1 from './routes/v1/payPeriods';
+import shiftsRouterV1 from './routes/v1/shifts';
 
 app.use('/pay-period', payPeriodsRouterV1);
 //app.use('/pay-period/:payPeriodId/shifts', shiftRouterV1);

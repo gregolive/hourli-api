@@ -1,6 +1,6 @@
 import express from 'express';
 import { body, validationResult } from 'express-validator';
-import Shift from '../../models/shift.js';
+import Shift from '../../models/shift';
 
 export const create = [
   // Validate and sanitize

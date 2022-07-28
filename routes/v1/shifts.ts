@@ -1,6 +1,6 @@
 import express from 'express';
-import upload from '../../config/multerConfig.js';
-import * as shiftsController from '../../controllers/v1/shiftsController.js';
+import upload from '../../config/multerConfig';
+import * as shiftsController from '../../controllers/v1/shiftsController';
 
 const shiftsRouterV1 = express.Router();
 shiftsRouterV1.post('/create', upload.none(), shiftsController.create);

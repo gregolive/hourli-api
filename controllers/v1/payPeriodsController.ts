@@ -1,6 +1,6 @@
 import express from 'express';
 import { body, validationResult } from 'express-validator';
-import PayPeriod from '../../models/payPeriod.js';
+import PayPeriod from '../../models/payPeriod';
 
 export const create = [
   // Validate and sanitize
