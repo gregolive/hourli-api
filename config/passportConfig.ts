@@ -54,7 +54,7 @@ const initialize = () => {
         if (!user) {
           // Github account has not logged in before
           const newUser = new User({
-            email: profile._json.email,
+            email: profile._json.email || '',
             email_verified : Boolean(profile._json.email),
             provider : 'github',
             providerId : profile.id,

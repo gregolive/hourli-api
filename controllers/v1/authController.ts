@@ -7,6 +7,13 @@ export const getUser = (req: express.Request, res: express.Response) => {
   res.send(req.user);
 };
 
+export const logout = ((req: express.Request, res: express.Response, next: express.NextFunction) => {
+  req.logout((err) => {
+    if (err) return next(err);
+    res.sendStatus(200);
+  });
+});
+
 export const googleLogin = passport.authenticate('google', {
   scope: ['profile', 'email'],
   prompt: 'select_account',
@@ -15,7 +22,7 @@ export const googleLogin = passport.authenticate('google', {
 export const googleCallback = [
   passport.authenticate('google', { failureRedirect: `${process.env.CLIENT_URL}/login`, session: true }),
   (req: express.Request, res: express.Response) => {
-    res.redirect(process.env.CLIENT_URL || '');
+    res.redirect(process.env.CLIENT_URL || '/');
   }
 ];
 
@@ -24,7 +31,7 @@ export const githubLogin = passport.authenticate('github');
 export const githubCallback = [
   passport.authenticate('github', { failureRedirect: `${process.env.CLIENT_URL}/login`, session: true }),
   (req: express.Request, res: express.Response) => {
-    res.redirect(process.env.CLIENT_URL || '');
+    res.redirect(process.env.CLIENT_URL || '/');
   }
 ];
 
@@ -33,6 +40,6 @@ export const twitterLogin = passport.authenticate('twitter');
 export const twitterCallback = [
   passport.authenticate('twitterCallback', { failureRedirect: `${process.env.CLIENT_URL}/login`, session: true }),
   (req: express.Request, res: express.Response) => {
-    res.redirect(process.env.CLIENT_URL || '');
+    res.redirect(process.env.CLIENT_URL || '/');
   }
 ];
