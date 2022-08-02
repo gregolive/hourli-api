@@ -29,6 +29,7 @@ initializeMongo();
 // passport setup
 initializePassport();
 app.use(passport.initialize());
+app.use(passport.session());
 
 // routes
 app.use('/api/v1/auth', authRouterV1);

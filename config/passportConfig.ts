@@ -1,5 +1,7 @@
 import passport from 'passport';
 import GoogleStrategy from 'passport-google-oauth20';
+import GitHubStrategy from 'passport-github2';
+import TwitterStrategy from 'passport-twitter';
 import { Error } from 'mongoose';
 import User from '../models/user';
 import { MongodbUser, PassportUser } from '../types';
@@ -13,36 +15,78 @@ const initialize = () => {
 
   passport.use(
     new GoogleStrategy.Strategy({
-      clientID: process.env.GOOGLE_APP_ID || '',
-      clientSecret: process.env.GOOGLE_APP_SECRET || '',
-      callbackURL: 'http://localhost:3001/api/v1/auth/google/callback',
+      clientID: process.env.GOOGLE_CLIENT_ID || '',
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
+      callbackURL: '/api/v1/auth/google/callback',
     }, (_accessToken, _refreshToken, profile, done) => {
-      /*
-      User.findOne({ 'provider_id' : profile.id }, (err: Error, user: MongodbUser) => {
+      User.findOne({ 'providerId' : profile.id }, (err: Error, user: MongodbUser) => {
         if (err) return done(err);
 
-        // Google account has not logged in before
         if (!user) {
+          // Google account has not logged in before
           const newUser = new User({
-            name: profile.displayName,
-            email: profile.emails && profile.emails[0].value,
-            email_verified : true,
+            email: profile._json.email,
+            email_verified : profile._json.email_verified,
             provider : 'google',
-            providerId : profile.id,    
+            providerId : profile.id,
           });
           newUser.save((error) => {
-            if (error) { return done(error); }
+            if (error) return done(error);
             return done(null, newUser);
           });
+        } else {
+          // Google account has previously logged in
+          done(null, user);
         }
-  
-        // Google account has previously logged in
-        return done(null, user);
-      });*/
-      console.log(profile)
-      return done(null, profile);
+      });
     })
   );
+
+  passport.use(
+    new GitHubStrategy.Strategy({
+      clientID: process.env.GITHUB_CLIENT_ID || '',
+      clientSecret: process.env.GITHUB_CLIENT_SECRET || '',
+      callbackURL: '/api/v1/auth/github/callback',
+    }, (_accessToken: string, _refreshToken: string, profile: any, done: Function) => {
+      User.findOne({ 'providerId' : profile.id }, (err: Error, user: MongodbUser) => {
+        if (err) return done(err);
+
+        if (!user) {
+          // Github account has not logged in before
+          const newUser = new User({
+            email: profile._json.email,
+            email_verified : Boolean(profile._json.email),
+            provider : 'github',
+            providerId : profile.id,
+          });
+          newUser.save((error) => {
+            if (error) return done(error);
+            return done(null, newUser);
+          });
+        } else {
+          // Github account has previously logged in
+          return done(null, user);
+        }
+      });
+    })
+  );
+
+  
+  // passport.use(
+  //   new TwitterStrategy.Strategy({
+  //     consumerKey: process.env.TWITTER_CLIENT_ID || '',
+  //     consumerSecret: process.env.TWITTER_CLIENT_SECRET || '',
+  //     callbackURL: '/api/v1/auth/twitter/callback',
+  //   }, (_accessToken, _refreshToken, profile, done) => {
+  //     /*
+  //     User.findOrCreate({ twitterId: profile.id }, function (err, user) {
+  //       return cb(err, user);
+  //     });
+  //     */
+  //     console.log(profile);
+  //     return done(null, profile);
+  //   })
+  // );
 };
 
 export default initialize;
