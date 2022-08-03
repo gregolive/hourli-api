@@ -1,7 +1,9 @@
 import passport from 'passport';
+import LocalStrategy from 'passport-local';
 import GoogleStrategy from 'passport-google-oauth20';
 import GitHubStrategy from 'passport-github2';
 import TwitterStrategy from 'passport-twitter';
+import bcrypt from 'bcryptjs';
 import { Error } from 'mongoose';
 import User from '../models/user';
 import { MongodbUser, PassportUser } from '../types';
@@ -12,6 +14,25 @@ const initialize = () => {
   passport.deserializeUser((id, done): void => {
     User.findById(id, (err: Error, user: MongodbUser) => done(err, user));
   });
+
+  passport.use(
+    new LocalStrategy.Strategy({
+      usernameField: 'email',
+    }, (email, password, done) => {
+      User.findOne({ email: email }, (err: Error, user: MongodbUser) => {
+        if (err) return done(err);
+        if (!user) return done(null, false, { message: 'Email not found' });
+
+        bcrypt.compare(password, user.password, (err: Error, res: boolean) => {
+          if (res) {
+            return done(null, user); // passwords match, log user in
+          } else {
+            return done(null, false, { message: 'Incorrect password' });
+          }
+        });
+      });
+    })
+  );
 
   passport.use(
     new GoogleStrategy.Strategy({
@@ -26,7 +47,7 @@ const initialize = () => {
           // Google account has not logged in before
           const newUser = new User({
             email: profile._json.email,
-            email_verified : profile._json.email_verified,
+            emailVerified : profile._json.email_verified,
             provider : 'google',
             providerId : profile.id,
           });
@@ -55,7 +76,7 @@ const initialize = () => {
           // Github account has not logged in before
           const newUser = new User({
             email: profile._json.email || '',
-            email_verified : Boolean(profile._json.email),
+            emailVerified : Boolean(profile._json.email),
             provider : 'github',
             providerId : profile.id,
           });
