@@ -5,8 +5,11 @@ const UserSchema = new Schema(
   {
     email: {
       type: String,
-      required: true,
-      unique: true,
+      trim: true,
+      index: {
+        unique: true,
+        partialFilterExpression: { email: { $type: 'string' } }
+      },
     },
     emailVerified: {
       type: Boolean,

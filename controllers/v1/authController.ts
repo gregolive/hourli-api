@@ -28,11 +28,12 @@ export const login = (req: express.Request, res: express.Response) => {
 
 export const register = [
   // Validate and sanitize
-  body('email').trim().escape().isEmail().withMessage('Please enter a valid email').custom(async (email) => {
-    return User.findOne({ email }).then((user) => {
-      if (user) return Promise.reject('Email already in use');
-    });
-  }),
+  body('email').trim().escape().normalizeEmail({ gmail_remove_dots: false }).isEmail().withMessage('Please enter a valid email')
+    .custom(async (email) => {
+      return User.findOne({ email }).then((user) => {
+        if (user) return Promise.reject('Email already in use');
+      });
+    }),
   body('password').trim().escape().matches('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{6,}')
     .withMessage('Entered password must be at least 6 characters long and contain an uppercase letter, number, and special character'),
   
