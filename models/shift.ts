@@ -15,16 +15,11 @@ const ShiftSchema = new Schema(
       type: Number,
       required: true,
     },
-    payPeriod: {
-      type: Schema.Types.ObjectId,
-      ref: 'PayPeriod',
-      //required: true,
-    },
-    /*user: {
+    user: {
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: true,
-    },*/
+    },
   }, {
     timestamps: true,
   }

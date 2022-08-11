@@ -7,7 +7,7 @@ import passport from 'passport';
 import initializeMongo from './config/mongoConfig';
 import initializePassport from './config/passportConfig';
 import authRouterV1 from './routes/v1/auth';
-import payPeriodsRouterV1 from './routes/v1/payPeriods';
+import usersRouterV1 from './routes/v1/users';
 import shiftsRouterV1 from './routes/v1/shifts';
 
 const app = express();
@@ -33,8 +33,7 @@ app.use(passport.session());
 
 // routes
 app.use('/api/v1/auth', authRouterV1);
-app.use('/api/v1/pay-period', payPeriodsRouterV1);
-//app.use('/pay-period/:payPeriodId/shifts', shiftRouterV1);
+app.use('/api/v1/users', usersRouterV1);
 app.use('/api/v1/shifts', shiftsRouterV1);
 
 export default app;

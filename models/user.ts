@@ -8,7 +8,7 @@ const UserSchema = new Schema(
       trim: true,
       index: {
         unique: true,
-        partialFilterExpression: { email: { $type: 'string' } }
+        partialFilterExpression: { email: { $type: 'string' } },
       },
     },
     emailVerified: {
@@ -26,6 +26,14 @@ const UserSchema = new Schema(
     password: {
       type: String,
       minLength: 6,
+    },
+    payPeriodStart: {
+      type: Date,
+    },
+    payPeriodType: {
+      type: String,
+      enum: ['Weekly', 'Biweekly', 'Monthly'],
+      default: 'Biweekly',
     },
   }, {
     timestamps: true,

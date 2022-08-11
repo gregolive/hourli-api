@@ -20,14 +20,15 @@ export const create = [
         length: req.body.length,
         breaks: req.body.breaks,
         payPeriod: req.params.payPeriodID,
-        //user: res.locals.user._id,
+        user: req.user,
       });
 
       shift.save((err) => {
         if (err) return next(err);
-        Shift.findOne({ _id: shift._id }).populate('payPeriod', 'startDate endDate').exec((error, populated_shift) => {
-          res.status(200).json({ shift: populated_shift });
-        });
+        // Shift.findOne({ _id: shift._id }).populate('payPeriod', 'startDate endDate').exec((error, populated_shift) => {
+        //   res.status(200).json({ shift: populated_shift });
+        // });
+        res.status(200).json({ shift });
       });
     }
   }
