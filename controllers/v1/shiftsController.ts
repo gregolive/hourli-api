@@ -2,6 +2,13 @@ import express from 'express';
 import { body, validationResult } from 'express-validator';
 import Shift from '../../models/shift';
 
+export const index = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+  const shifts = await Shift.find({ 'user': req.user }).sort({ created_at: -1 })
+    .catch((err) => next(err));
+
+  res.status(200).json({ shifts });
+}
+
 export const create = [
   // Validate and sanitize
   body('start', 'Start time is empty').trim().isLength({ min: 1 }).escape(),
